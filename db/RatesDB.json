@@ -1,11 +1,20 @@
 [
   {
+    "code": "USD",
+    "name": "USA Dollar",
+    "rate": 1,
+    "bid": 1,
+    "ask": 1,
+    "lastRefreshed": "2021-04-02T16:30:20.748Z",
+    "stored": "2021-04-02T16:30:20.748Z"
+  },
+  {
     "code": "GBP",
     "name": "British Pound Sterling",
-    "rate": 1.3838,
-    "bid": 1.38379,
-    "ask": 1.38383,
-    "stored": "2021-04-02T08:19:32.177Z",
-    "lastRefreshed": "2021-04-02T05:19:01.000Z"
+    "rate": 1.38179,
+    "bid": 1.381781,
+    "ask": 1.381812,
+    "stored": "2021-04-02T16:30:33.144Z",
+    "lastRefreshed": "2021-04-02T13:30:23.000Z"
   }
 ]

@@ -4,8 +4,9 @@ import * as path from 'path';
 import routes from './routes/index';
 import users from './routes/user';
 import rates from './routes/rates';
+import logger from './shared/logger';
 
-const debug = require('debug')('my express app');
+
 const app = express();
 
 // view engine setup
@@ -55,5 +56,5 @@ const PORT = process.env.PORT || 8080;
 app.set('port', PORT);
 
 const server = app.listen(app.get('port'), function () {
-    debug(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    logger.info(`Express server listening on port ${(server.address() as AddressInfo).port}`);
 });

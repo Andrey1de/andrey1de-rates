@@ -43,6 +43,7 @@
     <Content Include="views\error.pug" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="shared\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
@@ -52,7 +53,7 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="rates\logger.ts" />
+    <TypeScriptCompile Include="shared\logger.ts" />
     <TypeScriptCompile Include="rates\mock.file.service.ts" />
     <TypeScriptCompile Include="rates\rate.entities.ts" />
     <TypeScriptCompile Include="routes\rates.ts" />

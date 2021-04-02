@@ -9,6 +9,8 @@ export interface IRate {
 
 }
 
+
+
 export class Rate implements IRate {
 
     public code: string = '';
@@ -19,15 +21,15 @@ export class Rate implements IRate {
     public stored: Date = new Date('1900-01-01');
     public lastRefreshed: Date = new Date('1900-01-01');
    
-    constructor(iratio?: IRate) {
-        if (iratio) {
-            this.code = iratio.code.toUpperCase().substr(0, 3);
-            this.name = iratio.name;
-            this.rate = iratio.rate;
-            this.bid = iratio.bid;
-            this.ask = iratio.ask;
-            this.stored = iratio.stored;
-             this.lastRefreshed = iratio.lastRefreshed;
+    constructor(irate?: IRate) {
+        if (irate) {
+            this.code = irate.code.toUpperCase().substr(0, 3);
+            this.name = irate.name;
+            this.rate = irate.rate;
+            this.bid = irate.bid;
+            this.ask = irate.ask;
+            this.stored = irate.stored;
+             this.lastRefreshed = irate.lastRefreshed;
 
         }
 

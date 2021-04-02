@@ -5,7 +5,7 @@ const path = require("path");
 const index_1 = require("./routes/index");
 const user_1 = require("./routes/user");
 const rates_1 = require("./routes/rates");
-const debug = require('debug')('my express app');
+const logger_1 = require("./shared/logger");
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +44,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 8080;
 app.set('port', PORT);
 const server = app.listen(app.get('port'), function () {
-    debug(`Express server listening on port ${server.address().port}`);
+    logger_1.default.info(`Express server listening on port ${server.address().port}`);
 });
 //# sourceMappingURL=app.js.map

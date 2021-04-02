@@ -1,13 +1,13 @@
 import * as express from "express";
 import { IRate, Rate } from '../rates/rate.entities';
 import { MockFileService } from '../rates/mock.file.service';
-import logger from '../rates/logger';
+import logger from '../shared/logger';
 
 import { AddressInfo } from "net";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { StatusCodes } from 'http-status-codes';
-import { BADQUERY } from 'node:dns';
+import { BADQUERY, NODATA } from 'node:dns';
 import { inflateRaw } from "node:zlib";
 const OK = StatusCodes.OK;
 const BAD_REQUEST = StatusCodes.BAD_REQUEST;
@@ -15,40 +15,40 @@ const NOT_FOUND = StatusCodes.NOT_FOUND;
 const CREATED = StatusCodes.CREATED;
 const NO_CONTENT = StatusCodes.NO_CONTENT;
 const CONFLICT = StatusCodes.CONFLICT;
-
-
-
+const IM_A_TEAPOT = StatusCodes.IM_A_TEAPOT;
 //import RatesController from './rates/rate.controller';
-const SPAN_MS = Number(process.env.SPAN_MS) || 1000 * 3600;
-const RATE_DB_PATH = process.env.RATE_DB_PATH || './db/RateDb.json';
+const SPAN_MS = Number(process.env.SPAN_MS) || 1000 * 3600;	 // one hour
+const RATE_DB_PATH = process.env.RATE_DB_PATH || './db/RatesDb.json';
 const RATE_DB_DIR = process.env.RATE_DB_DIR || './db';
+
+
+const router = express();
+export default router;
+
+/*
+*  ==========  INIT MOCK DATA	==========
+*/
+
+const RateUsd: IRate = {
+	code: 'USD',
+	name: 'USA Dollar',
+	rate: 1.0,
+	bid: 1.0,
+	ask: 1.0,
+	lastRefreshed: new Date(),
+	stored: new Date()
+};
 
 const Mock = new MockFileService<IRate>();
 const MapRates: Map<string, IRate> = new Map<string, IRate>();
+//First read of Rates
 (async () => {
-	await Mock.init('./db', './db/RatesDB.json');
+	let arr: IRate[] = await Mock.init(RATE_DB_DIR,RATE_DB_PATH, [RateUsd]);
+	MapRates.set(RateUsd.code, RateUsd);
+	arr?.forEach(rate => MapRates.set(rate.code, rate));
 })();
-try {
-	if (Mock.init('./db', './db/RateDB.json')) {
-		logger.info(`Storage /db/rates.json OK`);
-
-		const arrRates: IRate[] = Mock.readSync();
-
-		if (arrRates && arrRates.length > 0) {
-			arrRates.forEach(p => {
-				MapRates.set(p.code, p);
-			})
-
-		}
 
 
-	} else {
-		logger.error(`Storage /db/rates.json FAILED`);
-	}
-} catch (e) {
-	logger.error(`Storage /db/rates.json FAILED, cause${e} `);
-
-}
 
 const getCode = (req: any) => {
 	const code = '' + req?.params?.code;
@@ -56,20 +56,13 @@ const getCode = (req: any) => {
 }
 
 
-const router = express();;
-
-
-
-
-
-
-
-export default router;
 
 async function tryGetYahoo(code: string): Promise<IRate | undefined> {
+	
 
+	if (code === 'USD') return RateUsd;
 	try {
-
+	
 		let rate: IRate | undefined = MapRates.get(code);
 		const dt0 = new Date().getTime();
 
@@ -142,7 +135,7 @@ async function tryGetYahoo(code: string): Promise<IRate | undefined> {
 		const db: IRate[] = [...MapRates.values()];
 		//    await this.save();
 		logger.info(`Retrieved ${rate.code}=${rate.rate} from Yahoo`);
-		Mock.writeSync(db);
+		let ft = Mock.write(db);
 		return rate;
 
 	} catch (err) {
@@ -152,16 +145,64 @@ async function tryGetYahoo(code: string): Promise<IRate | undefined> {
 
 }
 
+router.get(`/:from/:to`, (req, res) => {
+	const _from = ('' + req.params?.from).toUpperCase().substr(0, 3);
+	const _to     = ('' + req.params?.to).toUpperCase().substr(0, 3);
+
+	if (_from === '' || _to === '') {
+		res.status(BAD_REQUEST).end();
+		return;
+	}
+
+	Promise.all([
+		tryGetYahoo(_from),
+		tryGetYahoo(_to),
+	 ]).then(arr => {
+		let [iFrom, iTo] = arr;
+		if (!iFrom || !iTo) {
+			res.status(NOT_FOUND).end();
+		}
+		else if (iTo.rate == 0.0) {
+			res.status(NO_CONTENT).end();
+		} else {
+			const _rate = iFrom.rate / iTo.rate;
+			const updated = Math.min(iFrom.lastRefreshed.getTime(), iTo.lastRefreshed.getTime());
+			res.json({ rate: _rate, updated: new Date(updated) });
+		}
+	}).catch(err => {
+		logger.error(`Get from:${_from}/to:${_to} error ${err}`)
+		res.status(IM_A_TEAPOT).end();
+	});
+
+
+});
+
+
 router.get(`/:code`, (req, res) => {
 	const code = getCode(req);
 	if (code === '') {
-		res.status(BAD_REQUEST).end();
+		const str = `Get code:${code}  BAD_REQUEST`;
+		logger.error(str);
+		res.send(str).status(BAD_REQUEST).end();
+		return;
 	}
 
 	tryGetYahoo(code).then(
-		ret => res.status(200).json({ data: ret || 'undefined' }).end()
+		_rate => {
+			if (_rate) {
+				res.status(200).json({ data: _rate }).end()
+			} else {
+				const str = `Get code:${code}  NOT_FOUND`;
+				logger.error(str);
+				res.send(str).status(NOT_FOUND).end();
+ 			}
+		}
 	).catch(
-		err => res.status(NOT_FOUND).end()
+		err => {
+			const str = `Get code:${code} error ${err}`;
+			logger.error(str) ;
+			res.send(str).status(IM_A_TEAPOT).end();
+		}
 	);
 
 });
@@ -181,30 +222,21 @@ router.get(`/`, (req, res) => {
 });
 
 
-function deleteInternal(code: string, res) {
+function deleteInternal(code: string, res)  {
 
 	if (code === '') {
-		res.status(BAD_REQUEST).end();
+		const str = `Get code:${code}  BAD_REQUEST`;
+		logger.error(str);
+		res.send(str).status(BAD_REQUEST).end();
+		return;
 	}
 	const ret: boolean = MapRates.delete(code);
-	if (ret) {
-		Mock.write([...MapRates.values()]).then(
-			b => {
-				if (b) {
-					res.status(OK).end();
-					logger.info(`Removed USD-${code} `);
-				} else {
-					res.status(NO_CONTENT).end();
-				}
-			}
-		).catch(
-			err => {
-				res.status(NO_CONTENT).end();
-			}
-		);
+	if (Mock.write([...MapRates.values()])) {
+		res.status(OK).end();
 	} else {
-		res.status(NOT_FOUND).end();
+		res.status(NO_CONTENT).end();
 
 	}
+	
 }
 

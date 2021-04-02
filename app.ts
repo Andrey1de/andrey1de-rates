@@ -1,7 +1,6 @@
 import * as express from 'express';
 import { AddressInfo } from "net";
 import * as path from 'path';
-
 import routes from './routes/index';
 import users from './routes/user';
 

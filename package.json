@@ -1,6 +1,6 @@
 {
   "name": "andrey1de-rates",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "scripts": {
     "build": "tsc --build",
@@ -9,7 +9,7 @@
     "start:dev": "PORT=3000 node app",
     "deploy": "git add . && git commit -m \"Heroku\" && git push heroku master"
   },
-  "description": "",
+  "description": "Get one and two rates , expose table",
   "author": {
     "name": "Andrey Dergachev <andrey1de@gmail.com>"
   },

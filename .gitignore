@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /bin
+/db
 /obj
 /tmp
 /node_modules

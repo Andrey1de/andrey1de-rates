@@ -9,11 +9,11 @@ block content
               th Code
               th Name
               th Rate
-              th Last Fefreshed
+              th Last Refreshed
         tbody
           each rate in rates
               tr
                 td #{rate.code}
                 td #{rate.name}
                 td #{rate.rate}
-                td #{rate.lastRefreshed.toISOString()}
+                td #{rate.lastRefreshedd.toISOString().split('.')[0].replace('T',' ')}

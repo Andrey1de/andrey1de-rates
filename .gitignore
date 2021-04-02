@@ -13,6 +13,7 @@
 /tar
 *.tar
 *.suo
+*.user
 *.map
 *.js
 

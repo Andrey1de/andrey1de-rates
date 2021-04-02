@@ -48,14 +48,10 @@ const MapRates: Map<string, IRate> = new Map<string, IRate>();
 	arr?.forEach(rate => MapRates.set(rate.code, rate));
 })();
 
-
-
 const getCode = (req: any) => {
 	const code = '' + req?.params?.code;
 	return ('' + code).toUpperCase().substr(0, 3);
 }
-
-
 
 async function tryGetYahoo(code: string): Promise<IRate | undefined> {
 	
@@ -145,6 +141,10 @@ async function tryGetYahoo(code: string): Promise<IRate | undefined> {
 
 }
 
+function renderTable(req, res, data) { // eslint-disable-line @typescript-eslint/no-unused-vars
+	res.render('rates-table', {title: 'Rates Table', rates: data });
+};
+
 router.get(`/:from/:to`, (req, res) => {
 	const _from = ('' + req.params?.from).toUpperCase().substr(0, 3);
 	const _to     = ('' + req.params?.to).toUpperCase().substr(0, 3);
@@ -177,7 +177,6 @@ router.get(`/:from/:to`, (req, res) => {
 
 });
 
-
 router.get(`/:code`, (req, res) => {
 	const code = getCode(req);
 	if (code === '') {
@@ -185,9 +184,15 @@ router.get(`/:code`, (req, res) => {
 		logger.error(str);
 		res.send(str).status(BAD_REQUEST).end();
 		return;
+	} else if (code === 'TAB') {
+		const rates = [...MapRates.values()]
+			.sort((a, b) => a.code.localeCompare(b.code));
+		renderTable(req, res, rates);
+		return;
 	}
 
-	tryGetYahoo(code).then(
+
+	else tryGetYahoo(code).then(
 		_rate => {
 			if (_rate) {
 				res.status(200).json({ data: _rate }).end()

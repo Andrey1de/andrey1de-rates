@@ -5,16 +5,25 @@
     "rate": 1,
     "bid": 1,
     "ask": 1,
-    "lastRefreshed": "2021-04-02T16:30:20.748Z",
-    "stored": "2021-04-02T16:30:20.748Z"
+    "lastRefreshed": "2021-04-02T17:49:09.498Z",
+    "stored": "2021-04-02T17:49:09.498Z"
   },
   {
     "code": "GBP",
     "name": "British Pound Sterling",
-    "rate": 1.38179,
-    "bid": 1.381781,
-    "ask": 1.381812,
-    "stored": "2021-04-02T16:30:33.144Z",
-    "lastRefreshed": "2021-04-02T13:30:23.000Z"
+    "rate": 1.38241,
+    "bid": 1.382351,
+    "ask": 1.382413,
+    "stored": "2021-04-02T17:49:16.143Z",
+    "lastRefreshed": "2021-04-02T14:49:01.000Z"
+  },
+  {
+    "code": "RUB",
+    "name": "Russian Ruble",
+    "rate": 0.013026,
+    "bid": 0.0130256,
+    "ask": 0.0130263,
+    "stored": "2021-04-02T17:49:46.179Z",
+    "lastRefreshed": "2021-04-02T14:49:46.000Z"
   }
 ]

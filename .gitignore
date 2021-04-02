@@ -2,12 +2,38 @@
 
 # compiled output
 /dist
+/bin
+/obj
 /tmp
+/node_modules
+
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
 /tar
 *.tar
+*.suo
+*.map
+*.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # dependencies

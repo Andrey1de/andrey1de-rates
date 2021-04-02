@@ -13,7 +13,7 @@
   "author": {
     "name": "Andrey Dergachev <andrey1de@gmail.com>"
   },
-  "main": "app.js",
+  "main": "build/app.js",
   "dependencies": {
     "axios": "^0.21.1",
     "debug": "^2.6.9",

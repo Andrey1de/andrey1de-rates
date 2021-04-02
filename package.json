@@ -2,18 +2,21 @@
   "name": "andrey1de-rates",
   "version": "2.1.1",
   "private": true,
+  "main": "app.js",
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "node app",
-    "start:dev": "PORT=3000 node app",
+    "start": "node dist/app.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon app.js",
+    "watch-ts": "tsc -w",
+    "start:dev": "PORT=3000 node  app.js",
     "deploy": "git add . && git commit -m \"Heroku\" && git push heroku master"
   },
   "description": "Get one and two rates , expose table",
   "author": {
-    "name": "Andrey Dergachev <andrey1de@gmail.com>"
+    "name": "Andrey Dergachev @2021 <andrey1de@gmail.com>"
   },
-  "main": "build/app.js",
   "dependencies": {
     "axios": "^0.21.1",
     "debug": "^2.6.9",

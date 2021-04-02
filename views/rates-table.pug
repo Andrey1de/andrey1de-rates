@@ -3,7 +3,7 @@ extends layout
 block content
   h1= title
 
-      table(width='100%', cellspacing='0', cellpadding='0', border='0', bgcolor='#F2F2F2')
+      table(width='100%', cellspacing='0', cellpadding='0', border='1', bgcolor='#F2F2F2')
         thead
             tr
               th Code
@@ -16,4 +16,4 @@ block content
                 td #{rate.code}
                 td #{rate.name}
                 td #{rate.rate}
-                td #{rate.lastRefreshedd.toISOString().split('.')[0].replace('T',' ')}
+                td #{rate.lastRefreshed.toISOString().split('.')[0].replace('T',' ')}

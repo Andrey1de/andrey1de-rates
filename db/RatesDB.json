@@ -5,25 +5,34 @@
     "rate": 1,
     "bid": 1,
     "ask": 1,
-    "lastRefreshed": "2021-04-02T17:49:09.498Z",
-    "stored": "2021-04-02T17:49:09.498Z"
+    "lastRefreshed": "2021-04-02T18:07:34.322Z",
+    "stored": "2021-04-02T18:07:34.322Z"
   },
   {
     "code": "GBP",
     "name": "British Pound Sterling",
-    "rate": 1.38241,
-    "bid": 1.382351,
-    "ask": 1.382413,
-    "stored": "2021-04-02T17:49:16.143Z",
-    "lastRefreshed": "2021-04-02T14:49:01.000Z"
+    "rate": 1.38193,
+    "bid": 1.38192,
+    "ask": 1.381959,
+    "stored": "2021-04-02T18:07:38.096Z",
+    "lastRefreshed": "2021-04-02T15:07:22.000Z"
   },
   {
     "code": "RUB",
     "name": "Russian Ruble",
-    "rate": 0.013026,
-    "bid": 0.0130256,
-    "ask": 0.0130263,
-    "stored": "2021-04-02T17:49:46.179Z",
-    "lastRefreshed": "2021-04-02T14:49:46.000Z"
+    "rate": 0.013032,
+    "bid": 0.0130315,
+    "ask": 0.0130324,
+    "stored": "2021-04-02T18:07:49.897Z",
+    "lastRefreshed": "2021-04-02T15:07:40.000Z"
+  },
+  {
+    "code": "JPY",
+    "name": "Japanese Yen",
+    "rate": 0.009032,
+    "bid": 0.0090319,
+    "ask": 0.0090324,
+    "stored": "2021-04-02T18:07:49.982Z",
+    "lastRefreshed": "2021-04-02T15:07:42.000Z"
   }
 ]

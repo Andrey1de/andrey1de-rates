@@ -43,7 +43,7 @@ const Mock = new MockFileService<IRate>();
 const MapRates: Map<string, IRate> = new Map<string, IRate>();
 //First read of Rates
 (async () => {
-	let arr: IRate[] = await Mock.init(RATE_DB_DIR,RATE_DB_PATH, [RateUsd]);
+	let arr: IRate[] =  Mock.init(RATE_DB_DIR,RATE_DB_PATH, [RateUsd]);
 	MapRates.set(RateUsd.code, RateUsd);
 	arr?.forEach(rate => MapRates.set(rate.code, rate));
 })();
@@ -167,7 +167,7 @@ router.get(`/:from/:to`, (req, res) => {
 		} else {
 			const _rate = iFrom.rate / iTo.rate;
 			const updated = Math.min(iFrom.lastRefreshed.getTime(), iTo.lastRefreshed.getTime());
-			res.json({ rate: _rate, updated: new Date(updated) });
+			res.json({ from:_from,to:_to, rate: _rate, updated: new Date(updated) });
 		}
 	}).catch(err => {
 		logger.error(`Get from:${_from}/to:${_to} error ${err}`)
@@ -189,10 +189,23 @@ router.get(`/:code`, (req, res) => {
 			.sort((a, b) => a.code.localeCompare(b.code));
 		renderTable(req, res, rates);
 		return;
+	}	else if (code === 'SQL') {
+		const rates = [...MapRates.values()]
+			.filter(a => a.code != 'USD')
+			.sort((a, b) => a.code.localeCompare(b.code)) ;
+		const table = 'RateUSD';
+
+		let query = '';
+			rates.forEach(r => {
+			query += 'INSERT OR IGNORE INTO ' + table +
+				` (code, name,rate,bid,ask,stored,lastRefreshed)  VALUES ` + '\n'
+				+`( "${r.code}", "${r.name}", ${r.rate}, ${r.bid}, ${r.ask}, "${r.stored}","${r.lastRefreshed}");\n`
+			});
+		logger.info(	query );
+		res.status(200).send( query).end();
+		return;
 	}
-
-
-	else tryGetYahoo(code).then(
+	 else tryGetYahoo(code).then(
 		_rate => {
 			if (_rate) {
 				res.status(200).json({ data: _rate }).end()
@@ -223,9 +236,8 @@ router.delete(`/:code`, (req, res) => {
 });
 
 router.get(`/`, (req, res) => {
-	res.status(200).json({ data: [...MapRates.values()] }).end()
+	res.status(200).json({ data: [...MapRates.values()] }).end();
 });
-
 
 function deleteInternal(code: string, res)  {
 

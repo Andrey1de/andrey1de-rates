@@ -5,34 +5,61 @@
     "rate": 1,
     "bid": 1,
     "ask": 1,
-    "lastRefreshed": "2021-04-02T18:07:34.322Z",
-    "stored": "2021-04-02T18:07:34.322Z"
+    "lastRefreshed": "2021-04-03T20:23:15.375Z",
+    "stored": "2021-04-03T20:23:15.375Z"
   },
   {
-    "code": "GBP",
-    "name": "British Pound Sterling",
-    "rate": 1.38193,
-    "bid": 1.38192,
-    "ask": 1.381959,
-    "stored": "2021-04-02T18:07:38.096Z",
-    "lastRefreshed": "2021-04-02T15:07:22.000Z"
+    "code": "ILS",
+    "name": "Israeli New Sheqel",
+    "rate": 0.29935,
+    "bid": 0.299342,
+    "ask": 0.299356,
+    "stored": "2021-04-03T20:23:28.120Z",
+    "lastRefreshed": "2021-04-03T17:23:19.000Z"
   },
   {
     "code": "RUB",
     "name": "Russian Ruble",
-    "rate": 0.013032,
-    "bid": 0.0130315,
-    "ask": 0.0130324,
-    "stored": "2021-04-02T18:07:49.897Z",
-    "lastRefreshed": "2021-04-02T15:07:40.000Z"
+    "rate": 0.013058,
+    "bid": 0.0130578,
+    "ask": 0.0130584,
+    "stored": "2021-04-03T20:23:37.576Z",
+    "lastRefreshed": "2021-04-03T17:23:37.000Z"
+  },
+  {
+    "code": "EUR",
+    "name": "Euro",
+    "rate": 1.1762,
+    "bid": 1.17615,
+    "ask": 1.17621,
+    "stored": "2021-04-03T20:23:51.837Z",
+    "lastRefreshed": "2021-04-03T17:23:42.000Z"
+  },
+  {
+    "code": "CAD",
+    "name": "Canadian Dollar",
+    "rate": 0.7945,
+    "bid": 0.79449,
+    "ask": 0.79451,
+    "stored": "2021-04-03T20:23:52.256Z",
+    "lastRefreshed": "2021-04-03T17:23:51.000Z"
   },
   {
     "code": "JPY",
     "name": "Japanese Yen",
-    "rate": 0.009032,
-    "bid": 0.0090319,
-    "ask": 0.0090324,
-    "stored": "2021-04-02T18:07:49.982Z",
-    "lastRefreshed": "2021-04-02T15:07:42.000Z"
+    "rate": 0.009035,
+    "bid": 0.0090346,
+    "ask": 0.0090353,
+    "stored": "2021-04-03T20:25:08.825Z",
+    "lastRefreshed": "2021-04-03T17:25:02.000Z"
+  },
+  {
+    "code": "CNY",
+    "name": "Chinese Yuan",
+    "rate": 0.1523,
+    "bid": 0.15229,
+    "ask": 0.1523,
+    "stored": "2021-04-03T20:25:08.851Z",
+    "lastRefreshed": "2021-04-03T17:25:04.000Z"
   }
 ]

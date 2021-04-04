@@ -2,39 +2,14 @@
 
 # compiled output
 /dist
-/bin
-/db
-/obj
 /tmp
-/node_modules
-
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
-/tar
-*.tar
 *.suo
 *.user
-*.map
-*.js
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/obj
+/bin
 
 
 
@@ -67,9 +42,7 @@ speed-measure-plugin*.json
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
+*.log
 /typings
 
 # System Files

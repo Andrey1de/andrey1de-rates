@@ -10,61 +10,47 @@ export class MockFileService<T> {
      public dbFilePath = '';
     public dir = '';
 
-    public ready: boolean;
+    public ready: boolean = false;
 
     constructor() {
-  
     }
-    async init(dir: string, dbFilePath: string , initArray:T[]): Promise<T[]>{
-        let ret: T[] = [];
-        this.ready = false;
-		try {
-            if (!this.ready) {
-                this.dbFilePath = dbFilePath;
-                this.dir = dir;
-                let ft = await fs.exists(this.dir);
-                if (!ft) {
-                    if (! await fs.exists(this.dir)) {
-                        await fs.mkdir(this.dir, {
-                            recursive: true
-                        });
-                        await fs.chmod(this.dir, '777');
-                        fs.jsonfile(this.dbFilePath, []);
-                        await fs.chmod(this.dbFilePath, '777');
 
-
-                    }
-                    this.write( initArray);
-  
+    init(dir: string, dbFilePath: string, initArray: T[]): T[] {
+        this.dir = dir;
+        this.dbFilePath = dbFilePath;
+        this.tryInit()
+        return this.read();
+    }
+    protected tryInit() : boolean {
+        if (this.ready) return true;
+        try {
+            let ft = fs.existsSync(this.dbFilePath);
+            if (!ft) {
+                if (!fs.existsSync(this.dir)) {
+                    fs.mkdirSync(this.dir, {
+                        recursive: true
+                    });
                 }
-                return  this.read();
-         
+                fs.write();
             }
-		} catch (e) {
+          } catch (e) {
             logger.error(`Error : ${e} in reading ${this.dbFilePath} `);
-		}
-        this.ready = true;
-
-        return ret;
-    }
-
-    
+            return this.ready = false;
+         }
+         this.ready = true;
+	}
     public  read(): T[] {
-        if (!this.init) return [];
+        if (!this.tryInit()) return [];
         try {
             return  jsonfile.readFileSync(this.dbFilePath);
         } catch (e) {
             logger.error(e);
             logger.error(`Error : ${e} in reading ${this.dbFilePath} `);
             return [];
-
-        }
-
-    }
-  
-    
+          }
+       }
     public  write(db: T[]) : boolean {
-    if (!this.init) return;
+        if (!this.tryInit()) return;
         try {
             const json = JSON.stringify(db, null, 2);
              fs.writeFileSync(this.dbFilePath, json);
@@ -72,7 +58,6 @@ export class MockFileService<T> {
         } catch (e) {
             logger.error(e);
             logger.error(`Error : ${e} in writing ${this.dbFilePath} `);
-
         }
         return false;
     }

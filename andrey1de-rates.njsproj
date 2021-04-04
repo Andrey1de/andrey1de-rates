@@ -14,7 +14,7 @@
     <ProjectGuid>7ab8b1ce-56e3-472d-a582-1cf118da04c3</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>app.js</StartupFile>
+    <StartupFile>./src/app.js</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,36 +32,49 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="app.ts" />
-    <None Include="routes\index.ts" />
-    <None Include="routes\user.ts" />
-    <Content Include="db\RatesDb.json" />
+    <None Include="src\app.ts" />
+    <None Include="src\routes\index.ts" />
+    <None Include="src\routes\user.ts" />
+    <Content Include="sql\insert.rate.sql" />
+    <Content Include="sql\insert.stocks.sql" />
+    <Content Include="sql\RatioUsd.CreateTable.sql" />
+    <Content Include="sql\Stocks.CreateTable.sql" />
+    <Content Include="src\db\RatesDb.json" />
     <Content Include="Procfile" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
-    <Content Include="views\rates-table.pug" />
-    <Content Include="views\index.pug" />
-    <Content Include="views\layout.pug" />
-    <Content Include="views\error.pug" />
+    <Content Include="src\views\rates-table.pug" />
+    <Content Include="src\views\index.pug" />
+    <Content Include="src\views\layout.pug" />
+    <Content Include="src\views\error.pug" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="db\" />
-    <Folder Include="shared\" />
     <Folder Include="public\" />
-    <Folder Include="public\images\" />
+    <Folder Include="src\db\" />
+    <Folder Include="src\" />
+    <Folder Include="sql\" />
+    <Folder Include="src\shared\" />
+    <Folder Include="src\public\" />
+    <Folder Include="src\public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
-    <Folder Include="rates\" />
-    <Folder Include="routes\" />
-    <Folder Include="views\" />
+    <Folder Include="src\rates\" />
+    <Folder Include="src\routes\" />
+    <Folder Include="src\stoks\" />
+    <Folder Include="src\views\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="shared\logger.ts" />
-    <TypeScriptCompile Include="rates\mock.file.service.ts" />
-    <TypeScriptCompile Include="rates\rate.entities.ts" />
-    <TypeScriptCompile Include="routes\rates.ts" />
+    <TypeScriptCompile Include="src\app.ts" />
+    <TypeScriptCompile Include="src\routes\rates.ts" />
+    <TypeScriptCompile Include="src\routes\stocks.ts" />
+    <TypeScriptCompile Include="src\stoks\stock.entities.ts" />
+    <TypeScriptCompile Include="src\stoks\stocks.ts" />
+    <TypeScriptCompile Include="src\stoks\unirest-stocks.ts" />
+    <TypeScriptCompile Include="src\rates\rate.entities.ts" />
+    <TypeScriptCompile Include="src\shared\mock.file.service.ts" />
+    <TypeScriptCompile Include="src\shared\logger.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

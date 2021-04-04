@@ -4,6 +4,7 @@ import * as path from 'path';
 import routes from './routes/index';
 import users from './routes/user';
 import rates from './routes/rates';
+import stocks from './routes/stocks';
 import logger from './shared/logger';
 
 
@@ -15,6 +16,8 @@ app.set('view engine', 'pug');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/rates', rates);
+
+app.use('/stocks', stocks);
 
 app.use('/users', users);
 

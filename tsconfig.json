@@ -1,9 +1,18 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "module": "commonjs",
     "target": "es2018",
-    "lib": [ "es2018" ],
-    "sourceMap": true, 
+    "outDir": "./dist",
+    "lib": [ "es2017" ],
+
+    "emitDecoratorMetadata": true,
+    //  "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "removeComments": true,
+	 "downlevelIteration": true,
+    "sourceMap": true
   },
  
   "exclude": [

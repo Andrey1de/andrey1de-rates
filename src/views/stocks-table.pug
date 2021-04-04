@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+
+      table(width='100%', cellspacing='0', cellpadding='0', border='1', bgcolor='#F2F2F2')
+        thead
+            tr
+              th Code
+              th Region
+              th Name
+              th Rate
+              th Percent
+              th Last Refreshed
+        tbody
+          each rate in rates
+              tr
+                td #{rate.code}
+                td #{rate.name}
+                td #{rate.rate}
+                td #{rate.percent}
+                td #{rate.rate}
+                td #{rate.lastRefreshed}

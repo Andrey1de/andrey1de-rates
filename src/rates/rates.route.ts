@@ -1,6 +1,6 @@
 import * as express from "express";
 import { IRate, Rate } from '../rates/rate.entities';
-import { MockFileService } from '../rates/mock.file.service';
+import { MockFileService } from '../shared/mock.file.service';
 import logger from '../shared/logger';
 
 import { AddressInfo } from "net";
@@ -195,12 +195,13 @@ router.get(`/:code`, (req, res) => {
 			.sort((a, b) => a.code.localeCompare(b.code)) ;
 		const table = 'RateUSD';
 
-		let query = '';
+		let query = '<pre>';
 			rates.forEach(r => {
 			query += 'INSERT OR IGNORE INTO ' + table +
 				` (code, name,rate,bid,ask,stored,lastRefreshed)  VALUES ` + '\n'
-				+`( "${r.code}", "${r.name}", ${r.rate}, ${r.bid}, ${r.ask}, "${r.stored}","${r.lastRefreshed}");\n`
+				+` ("${r.code}", "${r.name}", ${r.rate}, ${r.bid}, ${r.ask}, "${r.stored}","${r.lastRefreshed}");\n`
 			});
+		query += '</pre>';
 		logger.info(	query );
 		res.status(200).send( query).end();
 		return;

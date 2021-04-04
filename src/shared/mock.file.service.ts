@@ -2,7 +2,7 @@ const jsonfile = require('jsonfile');
 
 const fs = require('fs');
 //import path from 'path';
-import logger from '../shared/logger';
+import logger from './logger';
 
 
 export class MockFileService<T> {

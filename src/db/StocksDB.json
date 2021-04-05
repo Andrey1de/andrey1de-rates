@@ -1,0 +1,28 @@
+[
+  {
+    "symbol": "IBM",
+    "open": 133.76,
+    "high": 133.93,
+    "low": 132.27,
+    "price": 133.23,
+    "volume": 4074161,
+    "latestTradingDay": "2021-04-01",
+    "previousClose": 133.26,
+    "change": -0.03,
+    "changePercent": null,
+    "updated": "2021-04-05T20:41:24.418Z"
+  },
+  {
+    "symbol": "TSLA",
+    "open": 688.37,
+    "high": 692.4203,
+    "low": 659.42,
+    "price": 661.75,
+    "volume": 35298378,
+    "latestTradingDay": "2021-04-01",
+    "previousClose": 667.93,
+    "change": -6.18,
+    "changePercent": null,
+    "updated": "2021-04-05T20:42:05.373Z"
+  }
+]

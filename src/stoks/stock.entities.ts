@@ -1,50 +1,72 @@
-export interface IStock {
-    code: string;
-    region: string ;
-    name: string ;
-    rate: number;
-    percent: number ;
-    bid: number;
-    ask: number;
-    stored: Date;
-    lastRefreshed: Date;
-
-}
 
 
+//"exchange": "NMS",
+//    "shortname": "Tesla, Inc.",
+//        "quoteType": "EQUITY",
+//            "symbol": "TSLA",
+//                "index": "quotes",
+//                    "score": 393920,
+//                        "typeDisp": "Equity",
+//                            "longname": "Tesla, Inc.",
+//                                "isYahooFinance": true
+//      }
 
-export class Stock implements IStock {
+import { GlobalQuoteAlpha } from "./alphaVantage/stock.alpha.entities";
 
-    public code: string = '';
-    public region: string = 'US';
-    public name: string = '';
-    public percent: number = -1;
-    public rate: number = -1;
-    public bid: number = -1;
-    public ask: number = -1;
-    public stored: Date = new Date('1900-01-01');
-    public lastRefreshed: Date = new Date('1900-01-01');
+
+//export interface Stock {
+//    symbol: string;//TSLA,
+//  //  region: string;//TSLA,
+//    shortname: string;//Tesla, Inc.,
+//    quoteType: string;//EQUITY,
+//    index: string;//quotes,
+//    score: number;//393920,
+//   // typeDisp: string;//Equity,
+//    longname: string;//Tesla, Inc.,
+//    percent: number ;
+//    updated: Date;
+//}
+
+
+
+export class Stock  {
+
+    symbol: string = '';// "IBM";//01
+    open: number = 0;// "133.7600";//02
+    high: number = 0;// "133.9300";//03
+    low: number = 0;// "132.2700";//04
+    price: number = 0;//  integer "133.2300";//05
+    volume: number = 0;// integer "4074161";//06
+    latestTradingDay: string = '';// "2021-04-01";//07
+    previousClose: number = 0;// "133.2600";//08
+    change: number = 0;// "-0.0300";//09
+    changePercent: number = 0;// "-0.0225%";//10
+    updated: Date = new Date();
+
+
    
-    constructor(irate?: IStock) {
-        if (irate) {
-            this.code = irate.code.trim().toLowerCase();//.substr(0,4);
-            this.name = irate.name;
-            this.percent = irate.percent;
-            this.rate = irate.rate;
-            this.bid = irate.bid;
-            this.ask = irate.ask;
-            this.stored = irate.stored;
-            this.lastRefreshed = irate.lastRefreshed;
+    constructor(that: GlobalQuoteAlpha | Stock | undefined = undefined) {
+        if (that) {
+            this.symbol = that?.symbol ;// "IBM";//01
+            this.open = +that?.open ;// "133.7600";//02
+            this.high = +that?.high ;// "133.9300";//03                undefined
+            this.low = +that?.low ;// "132.2700";//04
+            this.price = +that?.price ;// "133.2300";//05
+            this.volume = +that?.volume ;// "4074161";//06
+            this.latestTradingDay = that?.latestTradingDay ;// "2021-04-01";//07
+            this.previousClose = +that ?.previousClose ;// "133.2600";//08
+            this.change = +that?.change ;// "-0.0300";//09
+            this.changePercent = +(that?.toString().replace('\%','')) ;// "-0.0225%";//10
 
         }
 
     }
 
-    setPercent(percent : number) : number{
+ //   setPercent(percent : number) : number{
 
-       return this.rate *= (1 +  percent) * 100.0;
+ //       return this.score *= (1 +  percent) * 100.0;
 
-	}
+	//}
 
 
 }

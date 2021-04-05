@@ -8,8 +8,11 @@
 /bazel-out
 *.suo
 *.user
+*.js
+*.map
 /obj
 /bin
+# stocks.alphavantage.co.keys.md
 
 
 

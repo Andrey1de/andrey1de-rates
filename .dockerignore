@@ -2,3 +2,4 @@ e2e
 node_modules
 *.bat
 bin
+stocks.alphavantage.co.keys.md

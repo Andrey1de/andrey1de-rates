@@ -7,8 +7,8 @@ import rates from './routes/rates';
 import stocks from './routes/stocks';
 import logger from './shared/logger';
 
-
 const app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,6 +20,16 @@ app.use('/rates', rates);
 app.use('/stocks', stocks);
 
 app.use('/users', users);
+
+//app.get('/gen', (req, res) => {
+//	try {
+//       const entities = genGo();
+//        res.send(entities).end();
+//	} catch (e) {
+//        res.send({ error: e }).status(500).end();
+
+//	}
+//})
 
 
 app.use('/', routes);
@@ -55,9 +65,12 @@ app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-
     });
 });
 
+
 const PORT = process.env.PORT || 8080;
 app.set('port', PORT);
 
 const server = app.listen(app.get('port'), function () {
     logger.info(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    
 });
+

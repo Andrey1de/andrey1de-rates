@@ -2,11 +2,10 @@ import * as express from "express";
 import { IRate, Rate } from '../rates/rate.entities';
 import { MockFileService } from '../shared/mock.file.service';
 import logger from '../shared/logger';
-
+import { ratesRenderTable }   from '../rates/rates.render.table';
 import { AddressInfo } from "net";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-
-import { StatusCodes } from 'http-status-codes';
+ import { StatusCodes } from 'http-status-codes';
 import { BADQUERY, NODATA } from 'node:dns';
 import { inflateRaw } from "node:zlib";
 const OK = StatusCodes.OK;
@@ -141,9 +140,9 @@ async function tryGetYahoo(code: string): Promise<IRate | undefined> {
 
 }
 
-function renderTable(req, res, data) { // eslint-disable-line @typescript-eslint/no-unused-vars
-	res.render('rates-table', {title: 'Rates Table', rates: data });
-};
+//function renderTable(req, res, data) { // eslint-disable-line @typescript-eslint/no-unused-vars
+//	res.render('rates-table', {title: 'Rates Table', rates: data });
+//};
 
 router.get(`/:from/:to`, (req, res) => {
 	const _from = ('' + req.params?.from).toUpperCase().substr(0, 3);
@@ -187,7 +186,8 @@ router.get(`/:code`, (req, res) => {
 	} else if (code === 'TAB') {
 		const rates = [...MapRates.values()]
 			.sort((a, b) => a.code.localeCompare(b.code));
-		renderTable(req, res, rates);
+		const html = ratesRenderTable( rates);
+		res.send(html).status(OK).end();
 		return;
 	}	else if (code === 'SQL') {
 		const rates = [...MapRates.values()]
@@ -257,4 +257,6 @@ function deleteInternal(code: string, res)  {
 	}
 	
 }
+
+
 

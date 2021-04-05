@@ -17,7 +17,7 @@
     <StartupFile>./src/app.js</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>src\</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
@@ -35,12 +35,22 @@
     <None Include="src\app.ts" />
     <None Include="src\routes\index.ts" />
     <None Include="src\routes\user.ts" />
+    <Content Include="Rates.Zero.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="sql\insert.rate.sql" />
     <Content Include="sql\insert.stocks.sql" />
     <Content Include="sql\RatioUsd.CreateTable.sql" />
     <Content Include="sql\Stocks.CreateTable.sql" />
     <Content Include="src\db\RatesDb.json" />
     <Content Include="Procfile" />
+    <Content Include="src\db\StocksDB - Copy.json" />
+    <Content Include="src\db\StocksDB.json" />
+    <Content Include="src\stoks\alphaVantage\stock.alpha.axios.ts">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\views\stocks-table.pug" />
+    <Content Include="stocks.alphavantage.co.keys.md" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
@@ -63,15 +73,27 @@
     <Folder Include="src\rates\" />
     <Folder Include="src\routes\" />
     <Folder Include="src\stoks\" />
+    <Folder Include="src\stoks\alphaVantage\" />
+    <Folder Include="src\stoks\rapidapi\" />
     <Folder Include="src\views\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\app.ts" />
+    <TypeScriptCompile Include="src\rates\rates.render.table.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\routes\rates.ts" />
     <TypeScriptCompile Include="src\routes\stocks.ts" />
+    <TypeScriptCompile Include="src\shared\render.Table.style.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\stoks\global.quote.render.table.ts" />
+    <TypeScriptCompile Include="src\stoks\rapidapi\rapidapi.axios.ts" />
     <TypeScriptCompile Include="src\stoks\stock.entities.ts" />
-    <TypeScriptCompile Include="src\stoks\stocks.ts" />
-    <TypeScriptCompile Include="src\stoks\unirest-stocks.ts" />
+    <TypeScriptCompile Include="src\stoks\alphaVantage\stock.alpha.entities.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\stoks\unirest-stocks.ts.0" />
     <TypeScriptCompile Include="src\rates\rate.entities.ts" />
     <TypeScriptCompile Include="src\shared\mock.file.service.ts" />
     <TypeScriptCompile Include="src\shared\logger.ts" />

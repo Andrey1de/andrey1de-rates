@@ -1,15 +1,15 @@
 import * as express from "express";
-import { IStock, Stock } from '../stoks/stock.entities';
-import { MockFileService } from '../shared/mock.file.service';
-import logger from '../shared/logger';
-import * as path from 'path';
-import { AddressInfo } from "net";
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { loadStock } from '../stoks/unirest-stocks';
-
 import { StatusCodes } from 'http-status-codes';
-import { BADQUERY, NODATA } from 'node:dns';
-import { inflateRaw } from "node:zlib";
+import * as path from 'path';
+import logger from '../shared/logger';
+import { MockFileService } from '../shared/mock.file.service';
+import { Stock } from '../stoks/stock.entities';
+//HACK!!!
+//import { loadStockRatidApi as loadStock } from '../stoks/rapidapi/rapidapi.axios';
+import { loadGlobalQuoteAlpha } from '../stoks/alphaVantage/stock.alpha.axios';
+import { globalQuotesRenderTable } from "../stoks/global.quote.render.table";
+ 
+
 const OK = StatusCodes.OK;
 const BAD_REQUEST = StatusCodes.BAD_REQUEST;
 const NOT_FOUND = StatusCodes.NOT_FOUND;
@@ -19,7 +19,7 @@ const CONFLICT = StatusCodes.CONFLICT;
 const IM_A_TEAPOT = StatusCodes.IM_A_TEAPOT;
 //import RatesController from './rates/rate.controller';
 const SPAN_MS = Number(process.env.SPAN_MS) || 1000 * 3600;	 // one hour
-const RATE_DB_PATH = process.env.RATE_DB_PATH || './db/ActionsDb.json';
+const RATE_DB_PATH = process.env.RATE_DB_PATH || './db/StocksDb.json';
 const RATE_DB_DIR = process.env.RATE_DB_DIR || './db';
 
 
@@ -31,17 +31,23 @@ export default router;
 */
 
 
-const Mock = new MockFileService<IStock>();
-const MapRates = new Map<string, IStock>();
+const Mock = new MockFileService<Stock>();
+const MapStocks = new Map<string, Stock>();
 //First read of Rates
 (async () => {
-	let arr: IStock[] =  Mock.init(RATE_DB_DIR,RATE_DB_PATH, []);
-//	arr?.forEach(rate => MapRates.set(rate.code, rate));
-})();
+		try {
+			let arr: Stock[] = Mock.init(RATE_DB_DIR, RATE_DB_PATH, []);
+			arr?.forEach(rate =>
+				MapStocks.set(rate.symbol, new Stock(rate)));
+		} catch (e) {
+			logger.info(e);
+		}
+	}
+ )();
 
 const getCode = (req: any) => {
 	const code = '' + req?.params?.code;
-	return ('' + code).trim().toLowerCase();//.substr(0, 4);
+	return ('' + code).trim().toUpperCase();//.substr(0, 4);
 }
 
 
@@ -53,25 +59,27 @@ router.get(`/:code`, (req, res) => {
 		res.send(str).status(BAD_REQUEST).end();
 		return;
 	}
-	else if (code === 'table') {
-		const rates = [...MapRates.values()]//Array.from(MapRates.values())
-			.sort((a, b) => a.code.localeCompare(b.code));
-		renderTable(req, res, rates);
+	else if (code.startsWith('TABL')) {
+		const rates = [...MapStocks.values()]
+			.sort((a, b) => a.symbol.localeCompare(b.symbol));
+		let html = renderTable(req, res, rates);
+
+		//res.status(200).send(html).end();
 		return;
 	}
-	else if (code === 'sql') {
-		const rates: IStock[] = Array.from(MapRates.values());
-		
-		
-			//.sort((a, b) => a.code.localeCompare(b.code));
+	else if (code.startsWith('SQL') ){
+		const rates: Stock[] = [...MapStocks.values()]
+				.sort((a, b) => a.symbol.localeCompare(b.symbol));
 		const table = 'stocks';
 
 		let query = '<pre>';
 		rates.forEach(r => {
-			query += 'INSERT OR IGNORE INTO ' + table +
-				` (code, region,name,rate,bid,ask,stored,lastRefreshed)  VALUES ` + '\n'
-				+ ` ("${r.code}", "${r.region}, "${r.name}", ${r.rate}, ${r.percent}, ${r.bid}, ${r.bid}, ${r.ask}, "${r.stored}","${r.lastRefreshed}");\n`
-		});																			  
+			query += 'INSERT OR IGNORE INTO ' + table +	'\n' +
+`  (symbol,open,high,low,price,volume,	latestTradingDay,previousClose,change,changePercent)
+  VALUES ` + ` ("${r.symbol}", "${r.open}","${r.high}", "${r.low}", ${r.price},`
+				+ `"${r.volume}", ${r.latestTradingDay},\n`
+				+ `"${r.previousClose}", ${r.change},"${r.changePercent}");\n`
+		});
 		query += '</pre>';
 		logger.info(query);
 		res.status(200).send(query).end();
@@ -81,33 +89,35 @@ router.get(`/:code`, (req, res) => {
 
 });
 
-function renderTable(req, res, data) {
-	var __dirname = path.resolve(path.dirname(''));
 
-	// view engine setup
-	router.set('views', path.join(__dirname, 'views'));
-
-	res.render('rates-table', { title: 'Rates Table', rates: data });
-};
-
-async function tryLoadStock(code: string,res): Promise<any> {
-	const _stock = await loadStock(code).catch(
-		error => {
-			logger.error({ code: code, error: error });
-			res.status(IM_A_TEAPOT).json({ code : code, error: error }).end();
-		}
-	)
-		;
+async function tryLoadStock(code: string,res): Promise<Stock | undefined> {
+	let _stock: Stock | undefined = MapStocks.get(code);
+	if (!_stock) {
+		let _stock1 = await loadGlobalQuoteAlpha(code).catch(
+			error => {
+				logger.error({ code: code, error: error });
+				res.status(IM_A_TEAPOT).json({ code: code, error: error }).end();
+			}
+		)
+		if (_stock1)
+			_stock = _stock1;
+	}
+		
 	if (_stock) {
 		logger.info(_stock);
+		if (MapStocks.set(_stock.symbol, new Stock(_stock))) {
+			Mock.write([...MapStocks.values()]);
+		}
+			
 		res.status(200).json({ code: code, data: _stock }).end();
 	}
 	else {
 		const str = `Get code:${code}  NOT_FOUND`;
 		logger.error(str);
-		res.send(str).status(NOT_FOUND).end();
+		//
+		res.json({ code: code, error: 'NOT_FOUND' }).status(NOT_FOUND).end();
 	}
-
+	return new Stock(_stock);
  }
 
 router.get(`delete/:code`, (req, res) => {
@@ -121,7 +131,7 @@ router.delete(`/:code`, (req, res) => {
 });
 
 router.get(`/`, (req, res) => {
-	res.status(200).json({ data: [...MapRates.values()] }).end();
+	res.status(200).json({ data: [...MapStocks.values()] }).end();
 });
 
 function deleteInternal(code: string, res)  {
@@ -132,8 +142,8 @@ function deleteInternal(code: string, res)  {
 		res.send(str).status(BAD_REQUEST).end();
 		return;
 	}
-	const ret: boolean = MapRates.delete(code);
-	if (Mock.write([...MapRates.values()])) {
+	const ret: boolean = MapStocks.delete(code);
+	if (Mock.write([...MapStocks.values()])) {
 		res.status(OK).end();
 	} else {
 		res.status(IM_A_TEAPOT).end();
@@ -141,6 +151,22 @@ function deleteInternal(code: string, res)  {
 	}
 	
 }
+
+
+function renderTable(req, res, data) {
+	const strHtmlEnd = globalQuotesRenderTable(data)
+	
+	res.send(strHtmlEnd).status(OK).end();
+	return strHtmlEnd;
+
+
+	//var __dirname = path.resolve(path.dirname(''));
+
+	//// view engine setup
+	//router.set('views', path.join(__dirname, 'views'));
+
+	//res.render('stocks-table', { title: 'Stocks Table', stocks: data });
+};
 
 	// else tryGetYahoo(code).then(
 	//	_stock => {
@@ -153,7 +179,7 @@ function deleteInternal(code: string, res)  {
  //			}
 	//	}
 
-//async function tryGetYahoo(code: string): Promise<IStock | undefined>
+//async function tryGetYahoo(code: string): Promise<Stock | undefined>
 
 
  //{
@@ -162,7 +188,7 @@ function deleteInternal(code: string, res)  {
 //	if (code === 'USD') return RateUsd;
 //	try {
 
-//		let rate: IStock | undefined = MapRates.get(code);
+//		let rate: Stock | undefined = MapRates.get(code);
 //		const dt0 = new Date().getTime();
 
 //		if (rate) {
@@ -231,7 +257,7 @@ function deleteInternal(code: string, res)  {
 //		rate.ask = Number(arr[9].split(/\"/)[2]);//"9. Ask Price"));
 //		rate.stored = new Date();
 //		MapRates.set(code, rate);
-//		const db: IStock[] = [...MapRates.values()];
+//		const db: Stock[] = [...MapRates.values()];
 //		//    await this.save();
 //		logger.info(`Retrieved ${rate.code}=${rate.rate} from Yahoo`);
 //		//let ft = Mock.write(db);
